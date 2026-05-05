@@ -1,8 +1,8 @@
-import zmq, time, pickle, sys
+import zmq, time, pickle, sys, socket as sock
 from constPipe import *  #-
 
 context = zmq.Context()
-me = str(sys.argv[1])
+me = str(sys.argv[1]) if len(sys.argv) > 1 else sock.gethostname()
 r  = context.socket(zmq.PULL)     # create a pull socket
 p1 = "tcp://"+ SRC1 +":"+ PORT1   # address first task source
 p2 = "tcp://"+ SRC2 +":"+ PORT2   # address second task source
@@ -13,5 +13,6 @@ print (me + " started") #-
 
 while True:
   work = pickle.loads(r.recv())   # receive work from a source
-  print (me + " received " + str(work[1]) + " from " + work[0]) #-
-  time.sleep(work[1]*0.01)        # pretend to work
+  print (me + " received " + str(work)) #-
+  time.sleep(work*0.01)        # pretend to work
+ 
